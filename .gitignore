@@ -1,3 +1,6 @@
 taxi/input
 taxi/mlruns
 taxi/output
+taxi/mydb.sqlite
+taxi/artifacts
+taxi/mlartifacts
