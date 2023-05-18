@@ -1,1 +1,3 @@
-mlruns
+taxi/input
+taxi/mlruns
+taxi/output
