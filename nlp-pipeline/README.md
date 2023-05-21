@@ -38,3 +38,6 @@
     * [ ] There's a Makefile (1 point)
     * [ ] There are pre-commit hooks (1 point)
     * [ ] There's a CI/CI pipeline (2 points)
+
+# Alternative Data Sources
+* https://www.rss-blog.de/das-sind-die-top-nachrichten-rss-feeds-in-deutschland/
