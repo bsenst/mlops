@@ -28,6 +28,27 @@ def train_and_log_model(data_path, params):
     X_test, y_test = load_pickle(os.path.join(data_path, "test.pkl"))
 
     with mlflow.start_run():
+
+        params = {
+            'min_weight_fraction_leaf': 0.0,
+            'max_depth': 2,
+            'ccp_alpha': 0.0,
+            'criterion': 'squared_error',
+            'warm_start': False,
+            'max_leaf_nodes': None,
+            'max_samples': None,
+            'verbose': 0,
+            'n_estimators': 22,
+            'bootstrap': True,
+            'oob_score': False,
+            'n_jobs': -1,
+            'min_impurity_decrease': 0.0,
+            'min_samples_split': 8,
+            'min_samples_leaf': 2,
+            'random_state': 42,
+            'max_features': 1.0
+        }
+
         for param in RF_PARAMS:
             params[param] = int(params[param])
 
@@ -70,10 +91,12 @@ def run_register_model(data_path: str, top_n: int):
 
     # Select the model with the lowest test RMSE
     experiment = client.get_experiment_by_name(EXPERIMENT_NAME)
-    # best_run = client.search_runs( ...  )[0]
+    best_run = client.search_runs(experiment.experiment_id)[0]
 
     # Register the best model
-    # mlflow.register_model( ... )
+    uri = best_run.to_dictionary()["info"]["artifact_uri"]
+    name = best_run.to_dictionary()["info"]["run_name"]
+    mlflow.register_model(uri, name)
 
 
 if __name__ == '__main__':

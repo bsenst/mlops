@@ -8,3 +8,4 @@ taxi/.zen
 mlruns
 taxi/zenml_tutorial
 taxi/__pycache__
+mlartifacts
