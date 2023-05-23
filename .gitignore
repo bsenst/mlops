@@ -4,3 +4,7 @@ taxi/output
 taxi/mydb.sqlite
 taxi/artifacts
 taxi/mlartifacts
+taxi/.zen
+mlruns
+taxi/zenml_tutorial
+taxi/__pycache__
