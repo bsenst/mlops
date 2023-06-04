@@ -24,13 +24,19 @@ login to wandb
 
 `wandb login`
 
+add variables to the local environment
+
+`env WANDB_PROJECT_NAME="WANDB_PROJECT_NAME"`
+
+`env WANDB_USERNAME="WANDB_USERNAME"`
+
 run the script
 
 ```
 python preprocess_data.py \
   --wandb_project <WANDB_PROJECT_NAME> \
   --wandb_entity <WANDB_USERNAME> \
-  --raw_data_path <TAXI_DATA_FOLDER> \
+  --raw_data_path . \
   --dest_path ./output
 ```
 
@@ -43,3 +49,34 @@ list the folder files showing details
 `ls -l`
 
 ### 3. Train a model with Weights & Biases logging
+
+download the script
+
+`wget https://github.com/DataTalksClub/mlops-zoomcamp/raw/main/cohorts/2023/02-experiment-tracking/homework-wandb/train.py`
+
+run the script
+
+```
+python train.py \
+  --wandb_project <WANDB_PROJECT_NAME> \
+  --wandb_entity <WANDB_USERNAME> \
+  --data_artifact "<WANDB_USERNAME>/<WANDB_PROJECT_NAME>/NYC-Taxi:v0"
+```
+### 4. Tune model hyperparameters
+
+download the script
+
+`wget https://github.com/DataTalksClub/mlops-zoomcamp/raw/main/cohorts/2023/02-experiment-tracking/homework-wandb/sweep.py`
+
+```
+python sweep.py \
+  --wandb_project <WANDB_PROJECT_NAME> \
+  --wandb_entity <WANDB_USERNAME> \
+  --data_artifact "<WANDB_USERNAME>/<WANDB_PROJECT_NAME>/NYC-Taxi:v0"
+```
+
+### 5. Link the best model to the model registry
+
+on [https://wandb.ai/registry/model](https://wandb.ai/registry/model) create a model registry
+
+go to the best run of your sweep, open the artifact section and link the model to the registry
