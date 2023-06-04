@@ -26,11 +26,13 @@ login to wandb
 
 run the script
 
-```python preprocess_data.py \
+```
+python preprocess_data.py \
   --wandb_project <WANDB_PROJECT_NAME> \
   --wandb_entity <WANDB_USERNAME> \
   --raw_data_path <TAXI_DATA_FOLDER> \
-  --dest_path ./output```
+  --dest_path ./output
+```
 
 go inside the output folder
 
@@ -39,3 +41,5 @@ go inside the output folder
 list the folder files showing details
 
 `ls -l`
+
+### 3. Train a model with Weights & Biases logging
