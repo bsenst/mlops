@@ -9,3 +9,8 @@ mlruns
 taxi/zenml_tutorial
 taxi/__pycache__
 mlartifacts
+homework/week2-wandb/green_tripdata_2022-01.parquet
+homework/week2-wandb/green_tripdata_2022-02.parquet
+homework/week2-wandb/green_tripdata_2022-03.parquet
+homework/week2-wandb/output
+homework/week2-wandb/wandb
