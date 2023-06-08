@@ -43,3 +43,5 @@ def read_data(filename: str) -> pd.DataFrame:
 `prefect block register -m prefect_email`
 
 ### 6. Prefect Cloud
+
+[https://docs.prefect.io/2.10.12/cloud/automations/#create-an-automation](https://docs.prefect.io/2.10.12/cloud/automations/#create-an-automation)
