@@ -22,3 +22,6 @@ homework/week2-wandb/output
 homework/week2-wandb/wandb
 homework/week2-wandb/artifacts
 homework/week2-wandb/regressor.pkl
+
+homework/week4/df_results.parquet
+homework/week4/model.bin
