@@ -14,6 +14,7 @@ taxi/data
 mlartifacts
 mlruns
 wandb
+.venv
 
 homework/week2-wandb/green_tripdata_2022-01.parquet
 homework/week2-wandb/green_tripdata_2022-02.parquet
@@ -25,3 +26,7 @@ homework/week2-wandb/regressor.pkl
 
 homework/week4/df_results.parquet
 homework/week4/model.bin
+
+homework/week5/venv
+homework/week5/data
+homework/week5/models
