@@ -53,3 +53,31 @@ test_sample.py:9: AssertionError
 FAILED test_sample.py::test_answer - assert 4 == 5
 ================================================================================ 1 failed in 0.04s ================================================================================
 ```
+
+## Question 3: How many rows in the expected dataframe?
+
+Run `prepare_data(df_test)` from `test_batch.py` to get the expected dataframe.
+
+## Q4. Mocking S3 with Localstack
+
+Go inside the localstack folder
+
+`cd localstack`
+
+Follow the [instructions](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) to install the `aws command line interface`.
+
+Run `aws --version` to check correct installation.
+
+`wget https://github.com/localstack/localstack-cli/releases/download/v2.1.0/localstack-cli-2.1.0-linux-amd64-onefile.tar.gz`
+
+`sudo tar xvzf localstack-cli-2.1.0-linux-*-onefile.tar.gz -C /usr/local/bin`
+
+`localstack config validate`
+
+https://docs.localstack.cloud/getting-started/installation/#docker-compose
+
+`docker-compose up`
+
+`aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://nyc-duration`
+
+`aws --endpoint-url http://127.0.0.1:4566 s3 ls`

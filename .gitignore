@@ -36,3 +36,8 @@ homework/week5/models
 homework/week6/venv
 homework/week6/output
 homework/week6/test
+homework/week6/localstack/aws
+homework/week6/localstack/volume
+homework/week6/localstack/awscliv2.zip
+homework/week6/localstack/localstack-cli-2.1.0-linux-amd64-onefile.tar.gz
+homework/week6/localstack/localstack-demo
