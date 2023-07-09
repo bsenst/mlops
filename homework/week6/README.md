@@ -99,3 +99,7 @@ https://github.com/localstack/awscli-local
 ## Question 6: Sum of predicted durations for the test dataframe
 
 `(.venv) @bsenst ➜ .../mlops/homework/week6/localstack (main) $ python batch_s3.py 2022 02`
+
+## Cleaning up
+
+`docker-compose down`
