@@ -62,22 +62,40 @@ Run `prepare_data(df_test)` from `test_batch.py` to get the expected dataframe.
 
 Go inside the localstack folder
 
-`cd localstack`
+`cd homework/week6/localstack`
 
 Follow the [instructions](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) to install the `aws command line interface`.
 
 Run `aws --version` to check correct installation.
 
-`wget https://github.com/localstack/localstack-cli/releases/download/v2.1.0/localstack-cli-2.1.0-linux-amd64-onefile.tar.gz`
+`(.venv) @bsenst ➜ .../mlops/homework/week6/localstack (main) $ wget https://github.com/localstack/localstack-cli/releases/download/v2.1.0/localstack-cli-2.1.0-linux-amd64-onefile.tar.gz`
 
-`sudo tar xvzf localstack-cli-2.1.0-linux-*-onefile.tar.gz -C /usr/local/bin`
+`(.venv) @bsenst ➜ .../mlops/homework/week6/localstack (main) $ sudo tar xvzf localstack-cli-2.1.0-linux-*-onefile.tar.gz -C /usr/local/bin`
 
-`localstack config validate`
+`(.venv) @bsenst ➜ .../mlops/homework/week6/localstack (main) $ localstack config validate`
+
+## Question 5: Size of the input file on localstack
 
 https://docs.localstack.cloud/getting-started/installation/#docker-compose
 
-`docker-compose up`
+`(.venv) @bsenst ➜ .../mlops/homework/week6/localstack (main) $ docker-compose up`
 
-`aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://nyc-duration`
+`(.venv) @bsenst ➜ .../mlops/homework/week6/localstack (main) $ aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://nyc-duration`
 
-`aws --endpoint-url http://127.0.0.1:4566 s3 ls`
+`(.venv) @bsenst ➜ .../mlops/homework/week6/localstack (main) $ aws --endpoint-url http://127.0.0.1:4566 s3 ls`
+
+`(.venv) @bsenst ➜ .../mlops/homework/week6/localstack (main) $ export INPUT_FILE_PATTERN="s3://nyc-duration/in/{year:04d}-{month:02d}.parquet"`
+
+`(.venv) @bsenst ➜ .../mlops/homework/week6/localstack (main) $ export OUTPUT_FILE_PATTERN="s3://nyc-duration/out/{year:04d}-{month:02d}.parquet"`
+
+https://docs.localstack.cloud/user-guide/integrations/aws-cli/
+
+https://github.com/localstack/awscli-local
+
+`(.venv) @bsenst ➜ .../mlops/homework/week6/localstack (main) $ python ingestion_test.py 2022 02`
+
+`(.venv) @bsenst ➜ .../mlops/homework/week6/localstack (main) $ aws --endpoint-url http://127.0.0.1:4566 s3 ls s3://nyc-duration/out/`
+
+## Question 6: Sum of predicted durations for the test dataframe
+
+`(.venv) @bsenst ➜ .../mlops/homework/week6/localstack (main) $ python batch_s3.py 2022 02`
