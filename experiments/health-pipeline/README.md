@@ -20,9 +20,23 @@ Run `aws --version` to check correct installation.
 
 `localstack config validate`
 
+* `localstack start`
+* `docker`
+* `docker-compose up` with docker-compose.yml
+
+## Set up Workflow Orchestration & Experiment Tracking
+
+`prefect server start`
+
+http://127.0.0.1:4200
+
+`mlflow server`
+
+http://127.0.0.1:5000
+
 ## Load Training Data to S3 Bucket
 
-## Create Model - Experiment Tracking & Model Registry Rubric
+## Create Model
 
 ## Generate Synthetic Health Data for Inference
 Compiling the Synthea source code requires Java.
@@ -39,5 +53,6 @@ run the compiled code to create 100 synthetic patients with csv export format
 
 `./run_synthea -p 100 --exporter.csv.export=true`
 
-## Run Inference on Synthetic Data - Model Deployment Rubric
+## Run Inference on Synthetic Data
 
+## Monitor Model in Production
