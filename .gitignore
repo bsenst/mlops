@@ -1,3 +1,10 @@
+mlartifacts
+mlruns
+wandb
+.venv
+source
+venv
+
 taxi/input
 taxi/mlruns
 taxi/output
@@ -10,13 +17,6 @@ taxi/models
 taxi/zenml_tutorial
 taxi/__pycache__
 taxi/data
-
-mlartifacts
-mlruns
-wandb
-.venv
-source
-venv
 
 homework/week2-wandb/green_tripdata_2022-01.parquet
 homework/week2-wandb/green_tripdata_2022-02.parquet
@@ -41,3 +41,5 @@ homework/week6/localstack/volume
 homework/week6/localstack/awscliv2.zip
 homework/week6/localstack/localstack-cli-2.1.0-linux-amd64-onefile.tar.gz
 homework/week6/localstack/localstack-demo
+
+experiments/health-pipeline/notebooks/heart-disease
