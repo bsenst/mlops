@@ -4,9 +4,19 @@ Open a GitHub Codespace or run locally
 
 ## Set up Python virtual environment
 
-`python3 -m venv venv && source ./venv/bin/activate`
+### Create new Python virtual environment
+
+`python3 -m venv venv && source ./.venv/bin/activate`
 
 `pip install -r requirements.txt`
+
+### Activate prior Python virtual environment
+
+`source /workspaces/mlops/.venv/bin/activate`
+
+## Go to project folder
+
+`cd experiments/health-pipeline`
 
 ## Create Cloud Environment with Localstack and Terraform - Cloud Rubric
 
@@ -20,9 +30,17 @@ Run `aws --version` to check correct installation.
 
 `localstack config validate`
 
-* `localstack start`
-* `docker`
-* `docker-compose up` with docker-compose.yml
+`docker-compose up`
+
+`aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://s3bucket`
+
+`aws --endpoint-url http://127.0.0.1:4566 s3 ls`
+
+https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+
+https://docs.localstack.cloud/user-guide/integrations/terraform/
+
+
 
 ## Set up Workflow Orchestration & Experiment Tracking
 

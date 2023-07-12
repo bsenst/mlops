@@ -45,3 +45,5 @@ homework/week6/localstack/localstack-demo
 
 experiments/health-pipeline/notebooks/heart-disease
 experiments/__pycache__
+experiments/health-pipeline/volume
+experiments/health-pipeline/.terraform
