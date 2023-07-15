@@ -71,7 +71,7 @@ https://docs.localstack.cloud/user-guide/integrations/terraform/
 
 http://127.0.0.1:4200
 
-`mlflow server -h 0.0.0.0 -p 5000 --backend-store-uri sqlite:///mlflow.db --default-artifact-root s3://s3bucket`
+`mlflow server -h 0.0.0.0 -p 5000 --backend-store-uri sqlite:///mlflow.db`
 
 http://127.0.0.1:5000
 
