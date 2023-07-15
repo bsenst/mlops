@@ -50,3 +50,5 @@ experiments/health-pipeline/.terraform
 experiments/health-pipeline/aws
 experiments/health-pipeline/awscliv2.zip
 experiments/health-pipeline/localstack-cli-2.1.0-linux-amd64-onefile.tar.gz
+experiments/health-pipeline/heart-disease
+experiments/health-pipeline/mlflow.db

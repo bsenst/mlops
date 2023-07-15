@@ -12,6 +12,10 @@ services:
     environment:
       - DEBUG=${DEBUG-}
       - DOCKER_HOST=unix:///var/run/docker.sock
+      - LOCALSTACK_API_KEY=1234567890
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    command:
+      - "aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://s3bucket"
+      - "aws --endpoint-url http://127.0.0.1:4566 s3 ls"

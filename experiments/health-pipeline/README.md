@@ -2,23 +2,19 @@
 
 Open a GitHub Codespace or run locally
 
-## Set up Python virtual environment
+## First Time Setup
 
-### Go to project folder
+### Go to Project Folder
 
 `cd experiments/health-pipeline`
 
-### Create new Python virtual environment
+### Create new Python Virtual Environment
 
 `python3 -m venv venv && source ./venv/bin/activate`
 
-### Activate prior Python virtual environment
-
-`source /workspaces/mlops/.venv/bin/activate`
-
 `pip install -r requirements.txt`
 
-## Create Cloud Environment with Localstack and Terraform - Cloud Rubric
+### Prepare Cloud Environment
 
 Follow the [instructions](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) to install the `aws command line interface`.
 
@@ -38,9 +34,13 @@ Run `aws --version` to check correct installation.
 
 `docker-compose up`
 
+Check availability with `curl localhost:4566/_localstack/health | jq`
+
+`localstack ssh`
+
 https://github.com/localstack/localstack/issues/8424
 
-`aws configure`
+Run `aws configure` with the following configurations:
 
 ```
 AWS Access Key ID [None]: test
@@ -49,9 +49,17 @@ Default region name [None]: us-east-1
 Default output format [None]:
 ```
 
-`aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://s3bucket`
+Stop service with `docker-compose down` or Ctrl-C
 
-`aws --endpoint-url http://127.0.0.1:4566 s3 ls`
+## Setting up the Session
+
+### Go to Project Folder & Activate prior Python Virtual Environment
+
+`cd experiments/health-pipeline && source venv/bin/activate`
+
+### Start Cloud Environment - Cloud Rubric
+
+`docker-compose up`
 
 https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 
@@ -63,7 +71,7 @@ https://docs.localstack.cloud/user-guide/integrations/terraform/
 
 http://127.0.0.1:4200
 
-`mlflow server`
+`mlflow server -h 0.0.0.0 -p 5000 --backend-store-uri sqlite:///mlflow.db --default-artifact-root s3://s3bucket`
 
 http://127.0.0.1:5000
 

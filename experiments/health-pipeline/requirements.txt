@@ -5,5 +5,6 @@ scikit-learn
 prefect
 evidently
 mlflow
+boto3
 
 pytest
