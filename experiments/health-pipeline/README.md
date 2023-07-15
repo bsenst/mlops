@@ -4,23 +4,29 @@ Open a GitHub Codespace or run locally
 
 ## Set up Python virtual environment
 
+### Go to project folder
+
+`cd experiments/health-pipeline`
+
 ### Create new Python virtual environment
 
-`python3 -m venv venv && source ./.venv/bin/activate`
-
-`pip install -r requirements.txt`
+`python3 -m venv venv && source ./venv/bin/activate`
 
 ### Activate prior Python virtual environment
 
 `source /workspaces/mlops/.venv/bin/activate`
 
-## Go to project folder
-
-`cd experiments/health-pipeline`
+`pip install -r requirements.txt`
 
 ## Create Cloud Environment with Localstack and Terraform - Cloud Rubric
 
 Follow the [instructions](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) to install the `aws command line interface`.
+
+`curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"`
+
+`unzip awscliv2.zip`
+
+`sudo ./aws/install`
 
 Run `aws --version` to check correct installation.
 
@@ -32,6 +38,17 @@ Run `aws --version` to check correct installation.
 
 `docker-compose up`
 
+https://github.com/localstack/localstack/issues/8424
+
+`aws configure`
+
+```
+AWS Access Key ID [None]: test
+AWS Secret Access Key [None]: test
+Default region name [None]: us-east-1
+Default output format [None]:
+```
+
 `aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://s3bucket`
 
 `aws --endpoint-url http://127.0.0.1:4566 s3 ls`
@@ -39,8 +56,6 @@ Run `aws --version` to check correct installation.
 https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 
 https://docs.localstack.cloud/user-guide/integrations/terraform/
-
-
 
 ## Set up Workflow Orchestration & Experiment Tracking
 
