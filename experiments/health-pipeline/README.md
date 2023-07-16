@@ -32,11 +32,13 @@ Run `aws --version` to check correct installation.
 
 `localstack config validate`
 
-`docker-compose up`
+Start a virtual cloud environment with `docker-compose -f docker-compose-localstack.yml up`
 
-Check availability with `curl localhost:4566/_localstack/health | jq`
+Open another termin window
 
-`localstack ssh`
+Check cloud service availability with `curl localhost:4566/_localstack/health | jq`
+
+Connect to the virtual cloud `localstack ssh`
 
 https://github.com/localstack/localstack/issues/8424
 
@@ -55,7 +57,7 @@ Stop service with `docker-compose down` or Ctrl-C
 
 ### Go to Project Folder & Activate prior Python Virtual Environment
 
-`cd experiments/health-pipeline && source venv/bin/activate`
+`cd mlops/experiments/health-pipeline && source venv/bin/activate`
 
 ### Start Cloud Environment - Cloud Rubric
 
