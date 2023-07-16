@@ -12,7 +12,7 @@ services:
     environment:
       - DEBUG=${DEBUG-}
       - DOCKER_HOST=unix:///var/run/docker.sock
-      - LOCALSTACK_API_KEY=1234567890
+      # - LOCALSTACK_API_KEY=1234567890 # this triggers starting localstack pro version instead of community version
       - MAIN_DOCKER_NETWORK=ls
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
