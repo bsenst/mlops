@@ -36,7 +36,7 @@ Start a virtual cloud environment with `docker-compose -f docker-compose-localst
 
 Open another terminal window
 
-Check cloud service availability with `curl localhost:4566/_localstack/health | jq`
+Check cloud service availability with `curl localhost:4566/_localstack/health | jq` or type `localhost:4566/_localstack/health` in your browser address bar.
 
 `aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://s3bucket`
 
