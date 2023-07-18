@@ -4,9 +4,11 @@ Open a GitHub Codespace or run locally
 
 ## First Time Setup
 
+`git clone https://github.com/bsenst/mlops.git`
+
 ### Go to Project Folder
 
-`cd experiments/health-pipeline`
+`cd mlops/experiments/health-pipeline`
 
 ### Create new Python Virtual Environment
 
@@ -65,7 +67,7 @@ Stop service with `docker-compose down` or Ctrl-C
 
 ### Start Cloud Environment - Cloud Rubric
 
-`docker-compose up`
+`docker-compose -f docker-compose-localstack.yml up --remove-orphan`
 
 https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 
