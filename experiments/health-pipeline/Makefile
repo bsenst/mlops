@@ -20,3 +20,13 @@ SHELL = /bin/bash
 
 # target2:
 # 	$(PYTHON) script2.py
+
+# Targets and Commands
+.PHONY: all
+all: target1 target2
+
+target1:
+	bash mlflow server
+
+target2:
+	bash prefect server

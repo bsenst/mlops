@@ -9,7 +9,7 @@ services:
         context: ./mlflow
         dockerfile: Dockerfile-mlflow
       image: mlflow_server
-      container_name: mlflow_server
+      container_name: 
       ports:
         - 5051:5050
       networks:
