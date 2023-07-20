@@ -4,9 +4,11 @@ Open a GitHub Codespace or run locally
 
 ## First Time Setup
 
+`git clone https://github.com/bsenst/mlops.git`
+
 ### Go to Project Folder
 
-`cd experiments/health-pipeline`
+`cd mlops/experiments/health-pipeline`
 
 ### Create new Python Virtual Environment
 
@@ -65,7 +67,7 @@ Stop service with `docker-compose down` or Ctrl-C
 
 ### Start Cloud Environment - Cloud Rubric
 
-`docker-compose up`
+`docker-compose -f docker-compose-localstack.yml up --remove-orphan`
 
 https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 
@@ -100,7 +102,15 @@ compile Java programming code to machine code
 
 run the compiled code to create 100 synthetic patients with csv export format
 
-`./run_synthea -p 100 --exporter.csv.export=true`
+`./run_synthea -p 1000 --exporter.csv.export=true` will create synthetic health data for 1000 patients, which took 4m 43s on a 4-core 8GB RAM GitHub Codespace.
+
+`cd output/csv`
+
+`zip observations.csv.zip observations.csv && zip patients.csv.zip patients.csv`
+
+`mv observations.csv.zip ../../../mlops/experiments/health-pipeline/data/observations.csv.zip`
+
+`mv patients.csv.zip ../../../mlops/experiments/health-pipeline/data/patients.csv.zip`
 
 ## Run Inference on Synthetic Data
 

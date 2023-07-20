@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  mlflow:
+    build:
+      context: ./mlflow
+      dockerfile: Dockerfile
+    ports:
+      - 127.0.0.1:5000:5000
+  prefect:
+    build:
+      context: ./prefect
+      dockerfile: Dockerfile
+    ports:
+      - 127.0.0.1:4200:4200
