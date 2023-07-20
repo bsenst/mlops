@@ -12,7 +12,7 @@ Open a GitHub Codespace or run locally
 
 `python3 -m venv venv && source ./venv/bin/activate`
 
-`pip install -r requirements.txt`
+Install the required libraries in this environment with `pip install -r requirements.txt` which will take a while to download and install.
 
 ### Prepare Cloud Environment
 
