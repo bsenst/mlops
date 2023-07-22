@@ -1,0 +1,9 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://github.com/bsenst/mlops
+    rev: v3.2.0
+    hooks:
+    -   id: trailing-whitespace # trims trailing whitespace
+    -   id: end-of-file-fixer # ensures that a file is either empty, or ends with one newline
+    -   id: check-added-large-file # prevents giant files from being committed.
