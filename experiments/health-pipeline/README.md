@@ -1,48 +1,49 @@
 # Health Pipeline
 
-Open a GitHub Codespace or run locally
+Open a GitHub Codespace or run locally.
+
+These instructions have been tested on WSL2 Ubuntu
 
 ## First Time Setup
 
-`git clone https://github.com/bsenst/mlops.git`
+Clone the repository, create a Python virtual environment and install necessary libraries. 
 
-### Go to Project Folder
-
-`cd mlops/experiments/health-pipeline`
-
-### Create new Python Virtual Environment
-
-`python3 -m venv venv && source ./venv/bin/activate`
-
-Install the required libraries in this environment with `pip install -r requirements.txt` which will take a while to download and install.
+```bash
+git clone https://github.com/bsenst/mlops.git
+cd mlops/experiments/health-pipeline
+python3 -m venv venv && source ./venv/bin/activate
+pip install -r requirements.txt
+```
 
 ### Prepare Cloud Environment
 
 Follow the [instructions](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) to install the `aws command line interface`.
 
-`curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"`
-
-`unzip awscliv2.zip`
-
-`sudo ./aws/install`
+```bash
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+```
 
 Run `aws --version` to check correct installation.
 
-`wget https://github.com/localstack/localstack-cli/releases/download/v2.1.0/localstack-cli-2.1.0-linux-amd64-onefile.tar.gz`
+Make sure that the docker daemon is running on your system.
 
-`sudo tar xvzf localstack-cli-2.1.0-linux-*-onefile.tar.gz -C /usr/local/bin`
-
-`localstack config validate`
-
-Start a virtual cloud environment with `docker-compose -f docker-compose-localstack.yml up`
+```bash
+wget https://github.com/localstack/localstack-cli/releases/download/v2.1.0/localstack-cli-2.1.0-linux-amd64-onefile.tar.gz
+sudo tar xvzf localstack-cli-2.1.0-linux-*-onefile.tar.gz -C /usr/local/bin
+localstack config validate --file docker-compose-localstack.yml
+docker-compose -f docker-compose-localstack.yml up
+```
 
 Open another terminal window
 
 Check cloud service availability with `curl localhost:4566/_localstack/health | jq` or type `localhost:4566/_localstack/health` in your browser address bar.
 
-`aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://s3bucket`
-
-`aws --endpoint-url http://127.0.0.1:4566 s3 ls`
+```bash
+aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://s3bucket
+aws --endpoint-url http://127.0.0.1:4566 s3 ls
+```
 
 Connect to the virtual cloud `localstack ssh`
 
@@ -50,24 +51,28 @@ https://github.com/localstack/localstack/issues/8424
 
 Run `aws configure` with the following configurations:
 
-```
+```bash
 AWS Access Key ID [None]: test
 AWS Secret Access Key [None]: test
 Default region name [None]: us-east-1
 Default output format [None]:
 ```
 
-Stop service with `docker-compose down` or Ctrl-C
+To ttop service run `docker-compose down` or Ctrl-C.
 
 ## Setting up the Session
 
 ### Go to Project Folder & Activate prior Python Virtual Environment
 
-`cd mlops/experiments/health-pipeline && source venv/bin/activate`
+```bash
+cd mlops/experiments/health-pipeline && source venv/bin/activate
+```
 
 ### Start Cloud Environment - Cloud Rubric
 
-`docker-compose -f docker-compose-localstack.yml up --remove-orphan`
+```bash
+docker-compose -f docker-compose-localstack.yml up --remove-orphan
+```
 
 https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 
@@ -77,17 +82,26 @@ https://docs.localstack.cloud/tutorials/s3-static-website-terraform/
 
 ## Set up Workflow Orchestration & Experiment Tracking
 
-`prefect server start`
+Open a new termin to start the workflow orchestration tool prefect and see the dashboard at `http://127.0.0.1:4200`.
 
-http://127.0.0.1:4200
+```bash
+prefect server start
+```
 
-`mlflow server -h 0.0.0.0 -p 5000 --backend-store-uri sqlite:///mlflow.db`
+Start the machine learning tracking and registry tool mlflow and visit the dashboard at `http://127.0.0.1:5000`.
 
-http://127.0.0.1:5000
+```bash
+mlflow server -h 0.0.0.0 -p 5000 --backend-store-uri sqlite:///mlflow.db --default-artifact-root s3://s3bucket
+```
 
-## Load Training Data to S3 Bucket
+## Train the Model
 
-## Create Model
+```bash
+mkdir heart-disease && cd heart-disease && wget https://archive.ics.uci.edu/static/public/45/heart+disease.zip
+unzip heart+disease.zip && cd ..
+export MLFLOW_S3_ENDPOINT_URL=http://127.0.0.1:4566
+python scripts/train-heart-disease-model.py
+```
 
 ## Generate Synthetic Health Data for Inference
 Compiling the Synthea source code requires Java.
@@ -114,6 +128,10 @@ run the compiled code to create 100 synthetic patients with csv export format
 
 ## Run Inference on Synthetic Data
 
+```bash
+python scripts/predict-heart-disease.py
+```
+
 ### Create Lambda Service
 https://docs.localstack.cloud/tutorials/reproducible-machine-learning-cloud-pods/
 
@@ -121,7 +139,7 @@ https://docs.localstack.cloud/tutorials/reproducible-machine-learning-cloud-pods
 
 `aws --endpoint-url http://127.0.0.1:4566 s3 cp lambda.zip s3://reproducible-ml/lambda.zip`
 
-```
+```bash
 aws --endpoint-url http://127.0.0.1:4566 lambda create-function --function-name ml-train \
   --runtime python3.8 \
   --role arn:aws:iam::000000000000:role/lambda-role \
@@ -134,7 +152,7 @@ aws --endpoint-url http://127.0.0.1:4566 lambda create-function --function-name 
 
 `aws --endpoint-url http://127.0.0.1:4566 s3 cp infer.zip s3://reproducible-ml/infer.zip`
 
-```
+```bash
 aws --endpoint-url http://127.0.0.1:4566 lambda create-function --function-name ml-predict \
   --runtime python3.8 \
   --role arn:aws:iam::000000000000:role/lambda-role \
@@ -150,3 +168,7 @@ aws --endpoint-url http://127.0.0.1:4566 lambda create-function --function-name 
 `aws --endpoint-url http://127.0.0.1:4566 lambda delete-function --function-name ml-train`
 
 ## Monitor Model in Production
+
+```bash
+docker-compose -f grafana_monitoring_service/docker-compose.yml
+```

@@ -1,11 +1,9 @@
-# ! mkdir heart-disease && cd heart-disease && wget https://archive.ics.uci.edu/static/public/45/heart+disease.zip
-# ! unzip heart+disease.zip
-
 import numpy as np
 import pandas as pd
 
-import mlflow
 import pickle
+import mlflow
+from mlflow.models import infer_signature
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -47,7 +45,14 @@ if __name__ == "__main__":
         y_pred = logreg.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
         mlflow.log_metric("accuracy", accuracy)
-        mlflow.sklearn.log_model(logreg, artifact_path="models")
+        
+        # Log the sklearn model and register as version 1
+        mlflow.sklearn.log_model(
+            sk_model=logreg,
+            artifact_path="sklearn-model",
+            registered_model_name="sk-learn-log-reg-model",
+        )
+
         print('Accuracy: {:.2f}'.format(accuracy))
 
     mlflow.end_run()

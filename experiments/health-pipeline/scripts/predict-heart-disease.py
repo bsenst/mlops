@@ -19,12 +19,14 @@ def calculate_age(born):
     today = date.today()
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
-patients = pd.read_csv("../../../../synthea/output/csv/patients.csv")
+patients = pd.read_csv("data/patients.csv.zip")
 patients = patients[["Id", "BIRTHDATE", "GENDER"]]
 patients["AGE"] = patients.BIRTHDATE.apply(pd.to_datetime).apply(calculate_age)
 patients = patients[["Id", "AGE", "GENDER"]]
 patients["GENDER"] = patients.GENDER.map(lambda x: 1 if x=="M" else 0)
 patients.rename(columns={"Id": "PATIENT"}, inplace=True)
+
+observations = pd.read_csv("data/observations.csv.zip")
 
 # observations[observations.DESCRIPTION.isin([
 #     "Systolic Blood Pressure", 'Glucose [Mass/volume] in Blood', 'Cholesterol [Mass/volume] in Serum or Plasma'
@@ -54,4 +56,4 @@ heart_disease_logreg_model.predict(X)
 
 # hypothetic patient data to predict coronary artery disease with one affected vessel
 # surprising predicting behavior of the model - reevaluate training data
-heart_disease_logreg_model.predict([[50, 0, 75, 200, 0]])
+print(heart_disease_logreg_model.predict([[50, 0, 75, 200, 0]]))
