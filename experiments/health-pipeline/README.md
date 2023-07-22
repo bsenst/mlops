@@ -167,8 +167,18 @@ aws --endpoint-url http://127.0.0.1:4566 lambda create-function --function-name 
 
 `aws --endpoint-url http://127.0.0.1:4566 lambda delete-function --function-name ml-train`
 
+## Prefect Deployment
+
+```bash
+python scripts/prefect_deploy.py
+```
+
 ## Monitor Model in Production
 
 ```bash
 docker-compose -f grafana_monitoring_service/docker-compose.yml
+```
+
+```bash
+python scripts/example_run_request.py
 ```
