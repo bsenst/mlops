@@ -1,4 +1,0 @@
-name: Makefile CI
-
-quality_checks:
-	isort .
