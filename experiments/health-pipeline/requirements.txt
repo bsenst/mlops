@@ -1,6 +1,8 @@
 pandas
 numpy
 scikit-learn
+xgboost
+hyperopt
 
 prefect
 evidently
@@ -8,3 +10,4 @@ mlflow
 boto3
 
 pytest
+pre-commit

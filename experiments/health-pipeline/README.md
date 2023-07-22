@@ -1,7 +1,7 @@
 # Screening for Cardiac Disease
 Screening for cardiac disease in huge populations is challenging. Invasive (cardiac catheterization) and non-invasive (imaging, exercise testing) diagnostic procedures are available which also differ regarding availability, diagnostic strength, and costs. Clinical features are helpful to screen in routine setting. Furthermore screening solely using patient data can additional lower the barrier to recognize people at risk. The machine learning model included in this data pipeline was trained on the heart disease dataset from the UCI machine learning repository. To illustrate its use the trained model is deployed to run batch inference on synthetic patient data created by the Synthea library.
 
-***The limited training data resulted in low accuracy accuracy of the final model. But in general, this service does not include medical advice and should not used in real world practice.***
+***The limited training data resulted in low accuracy of the final model and in general, this service does not include medical advice and should not used in real world practice.***
 
 # Cardiac Health Pipeline
 
