@@ -1,5 +1,7 @@
 # Health Pipeline
 
+![pipeline-architecture-image](https://github.com/bsenst/mlops/assets/8211411/8c1bb839-7759-47ba-aa83-13c0b21407f7)
+
 Open a GitHub Codespace or run locally.
 
 These instructions have been tested on WSL2 Ubuntu
