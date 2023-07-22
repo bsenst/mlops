@@ -1,10 +1,15 @@
-# Health Pipeline
+# Screening for Cardiac Disease
+Screening for cardiac disease in huge populations is challenging. Invasive (cardiac catheterization) and non-invasive (imaging, exercise testing) diagnostic procedures are available which also differ regarding availability, diagnostic strength, and costs. Clinical features are helpful to screen in routine setting. Furthermore screening solely using patient data can additional lower the barrier to recognize people at risk. The machine learning model included in this data pipeline was trained on the heart disease dataset from the UCI machine learning repository. To illustrate its use the trained model is deployed to run batch inference on synthetic patient data created by the Synthea library.
+
+***The limited training data resulted in low accuracy accuracy of the final model. But in general, this service does not include medical advice and should not used in real world practice.***
+
+# Cardiac Health Pipeline
 
 ![pipeline-architecture-image](https://github.com/bsenst/mlops/assets/8211411/8c1bb839-7759-47ba-aa83-13c0b21407f7)
 
 Open a GitHub Codespace or run locally.
 
-These instructions have been tested on WSL2 Ubuntu
+These instructions have been tested on WSL2 Ubuntu.
 
 ## First Time Setup
 
@@ -17,7 +22,7 @@ python3 -m venv venv && source ./venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Prepare Cloud Environment
+### Prepare Cloud Environment on Localstack
 
 Follow the [instructions](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) to install the `aws command line interface`.
 
@@ -184,3 +189,29 @@ docker-compose -f grafana_monitoring_service/docker-compose.yml
 ```bash
 python scripts/example_run_request.py
 ```
+
+## Pre-commit Hook
+Has already been integrated in this repository using the following commands:
+
+```bash
+$ pip install pre-commit
+$ pre-commit install
+$ pre-commit run --all-files
+```
+
+- https://github.com/pre-commit/demo-repo#readme
+- https://pre-commit.com/hooks.html
+
+### Project Evaluation
+- [x] Problem description
+- [x] Cloud deployed with Localstack
+- [x] Experiment tracking with MLFlow
+- [x] Prefect for workflow orchestration
+- [x] Monitoring the model and inference data with Evidently, Grafana and Prometheus
+- [x] Instructions for Reproducibility
+- [ ] Unit tests
+- [ ] Integration tests
+- [ ] Code linting
+- [ ] Makefile for easy deploying
+- [x] Pre-commit hooks
+- [ ] Continuous integration and deployment
