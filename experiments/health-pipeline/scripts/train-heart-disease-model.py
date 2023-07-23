@@ -1,14 +1,13 @@
+import pickle
+
 import numpy as np
 import pandas as pd
-
-import pickle
-import mlflow
 from mlflow.models import infer_signature
-
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
 
+import mlflow
 
 if __name__ == "__main__":
 

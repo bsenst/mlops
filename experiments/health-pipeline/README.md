@@ -22,7 +22,7 @@ python3 -m venv venv && source ./venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Prepare Cloud Environment on Localstack
+### Prepare Cloud Environment with Localstack
 
 Follow the [instructions](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) to install the `aws command line interface`.
 
@@ -34,27 +34,32 @@ sudo ./aws/install
 
 Run `aws --version` to check correct installation.
 
-Make sure that the docker daemon is running on your system.
-
 ```bash
 wget https://github.com/localstack/localstack-cli/releases/download/v2.1.0/localstack-cli-2.1.0-linux-amd64-onefile.tar.gz
 sudo tar xvzf localstack-cli-2.1.0-linux-*-onefile.tar.gz -C /usr/local/bin
-localstack config validate --file docker-compose-localstack.yml
-docker-compose -f docker-compose-localstack.yml up
 ```
 
-Open another terminal window
+Run `localstack config validate --file docker-compose-localstack.yml` to validate the docker-compose file and check the proper installation of localstack.
 
-Check cloud service availability with `curl localhost:4566/_localstack/health | jq` or type `localhost:4566/_localstack/health` in your browser address bar.
+## Starting the Services
+
+Run several commands to start localstack, mlflow, prefect and monitoring service with make.
 
 ```bash
-aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://s3bucket
-aws --endpoint-url http://127.0.0.1:4566 s3 ls
+make
 ```
 
-Connect to the virtual cloud `localstack ssh`
+Open a another terminal window to continue and dont forget to activate the Python virtual environment.
 
-https://github.com/localstack/localstack/issues/8424
+```bash
+cd mlops/experiments/health-pipeline && source venv/bin/activate
+```
+
+### Cloud Environment with Localstack
+
+You can connect to/go inside the virtual cloud by entering the `localstack ssh` command.
+
+Check cloud service availability with `curl localhost:4566/_localstack/health | jq` or type `localhost:4566/_localstack/health` in your browser address bar.
 
 Run `aws configure` with the following configurations:
 
@@ -65,20 +70,11 @@ Default region name [None]: us-east-1
 Default output format [None]:
 ```
 
-To ttop service run `docker-compose down` or Ctrl-C.
-
-## Setting up the Session
-
-### Go to Project Folder & Activate prior Python Virtual Environment
+Create a S3 bucket for later use.
 
 ```bash
-cd mlops/experiments/health-pipeline && source venv/bin/activate
-```
-
-### Start Cloud Environment - Cloud Rubric
-
-```bash
-docker-compose -f docker-compose-localstack.yml up --remove-orphan
+aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://s3bucket
+aws --endpoint-url http://127.0.0.1:4566 s3 ls
 ```
 
 https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
@@ -87,51 +83,40 @@ https://docs.localstack.cloud/user-guide/integrations/terraform/
 
 https://docs.localstack.cloud/tutorials/s3-static-website-terraform/
 
-## Set up Workflow Orchestration & Experiment Tracking
+https://github.com/localstack/localstack/issues/8424
 
-Open a new termin to start the workflow orchestration tool prefect and see the dashboard at `http://127.0.0.1:4200`.
+### Workflow Orchestration & Experiment Tracking
 
-```bash
-prefect server start
-```
+See the workflow orchestration tool prefect at `http://127.0.0.1:4200`.
 
-Start the machine learning tracking and registry tool mlflow and visit the dashboard at `http://127.0.0.1:5000`.
+See the machine learning tracking tool mlflow at `http://127.0.0.1:5000`.
 
-```bash
-mlflow server -h 0.0.0.0 -p 5000 --backend-store-uri sqlite:///mlflow.db --default-artifact-root s3://s3bucket
-```
-
-## Train the Model
+## Download the Training Dataset & Train your first Model
 
 ```bash
 mkdir heart-disease && cd heart-disease && wget https://archive.ics.uci.edu/static/public/45/heart+disease.zip
 unzip heart+disease.zip && cd ..
+```
+
+```bash
 export MLFLOW_S3_ENDPOINT_URL=http://127.0.0.1:4566
 python scripts/train-heart-disease-model.py
 ```
 
 ## Generate Synthetic Health Data for Inference
-Compiling the Synthea source code requires Java.
+Working with the Synthea source code requires Java and Gradle.
+
+```bash
+git clone https://github.com/synthetichealth/synthea.git && cd synthea
+./gradlew build check test
+./run_synthea -p 1000 --exporter.csv.export=true
+cd output/csv
+zip observations.csv.zip observations.csv && zip patients.csv.zip patients.csv
+mv observations.csv.zip ../../../mlops/experiments/health-pipeline/data/observations.csv.zip
+mv patients.csv.zip ../../../mlops/experiments/health-pipeline/data/patients.csv.zip
+```
 
 https://github.com/synthetichealth/synthea
-
-`@bsenst ➜ /workspaces $ git clone https://github.com/synthetichealth/synthea.git && cd synthea`
-
-compile Java programming code to machine code
-
-`@bsenst ➜ /workspaces/synthea (master) $ ./gradlew build check test`
-
-run the compiled code to create 100 synthetic patients with csv export format
-
-`./run_synthea -p 1000 --exporter.csv.export=true` will create synthetic health data for 1000 patients, which took 4m 43s on a 4-core 8GB RAM GitHub Codespace.
-
-`cd output/csv`
-
-`zip observations.csv.zip observations.csv && zip patients.csv.zip patients.csv`
-
-`mv observations.csv.zip ../../../mlops/experiments/health-pipeline/data/observations.csv.zip`
-
-`mv patients.csv.zip ../../../mlops/experiments/health-pipeline/data/patients.csv.zip`
 
 ## Run Inference on Synthetic Data
 
