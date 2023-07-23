@@ -124,40 +124,36 @@ https://github.com/synthetichealth/synthea
 python scripts/predict-heart-disease.py
 ```
 
-### Create Lambda Service
+### Serving as Lambda Serverless Function 
 https://docs.localstack.cloud/tutorials/reproducible-machine-learning-cloud-pods/
 
-`zip lambda.zip train.py`
-
-`aws --endpoint-url http://127.0.0.1:4566 s3 cp lambda.zip s3://reproducible-ml/lambda.zip`
-
 ```bash
-aws --endpoint-url http://127.0.0.1:4566 lambda create-function --function-name ml-train \
+# zip the python script
+zip lambda.zip test-lambda.py 
+
+# create a new S3 bucket and upload the zipped python script
+aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://lambda-functions
+aws --endpoint-url http://127.0.0.1:4566 s3 cp lambda.zip s3://lambda-functions/lambda.zip
+
+# create the lambda service within localstack
+aws --endpoint-url http://127.0.0.1:4566 lambda create-function --function-name test-lambda \
   --runtime python3.8 \
   --role arn:aws:iam::000000000000:role/lambda-role \
-  --handler train.handler \
+  --handler test-lambda.handler_name \
   --timeout 600 \
-  --code '{"S3Bucket":"reproducible-ml","S3Key":"lambda.zip"}'
+  --code '{"S3Bucket":"lambda-functions","S3Key":"lambda.zip"}'
+
+# invoke the lambda function
+aws --endpoint-url http://127.0.0.1:4566 lambda invoke \
+    --function-name test-lambda \
+    --cli-binary-format raw-in-base64-out \
+    --payload '{ "name": "Bob" }' \
+    /dev/stdout
 ```
-
-`zip infer.zip predict.py`
-
-`aws --endpoint-url http://127.0.0.1:4566 s3 cp infer.zip s3://reproducible-ml/infer.zip`
 
 ```bash
-aws --endpoint-url http://127.0.0.1:4566 lambda create-function --function-name ml-predict \
-  --runtime python3.8 \
-  --role arn:aws:iam::000000000000:role/lambda-role \
-  --handler infer.handler \
-  --timeout 600 \
-  --code '{"S3Bucket":"reproducible-ml","S3Key":"infer.zip"}'
+aws --endpoint-url http://127.0.0.1:4566 lambda delete-function --function-name test-lambda
 ```
-
-### Use Lambda Service
-
-`aws --endpoint-url http://127.0.0.1:4566 lambda invoke --function-name ml-train /tmp/test.tmp`
-
-`aws --endpoint-url http://127.0.0.1:4566 lambda delete-function --function-name ml-train`
 
 ## Prefect Deployment
 
@@ -166,10 +162,7 @@ python scripts/prefect_deploy.py
 ```
 
 ## Monitor Model in Production
-
-```bash
-docker-compose -f grafana_monitoring_service/docker-compose.yml
-```
+https://github.com/evidentlyai/evidently/blob/main/examples/integrations/grafana_monitoring_service
 
 ```bash
 python scripts/example_run_request.py
@@ -187,16 +180,32 @@ $ pre-commit run --all-files
 - https://github.com/pre-commit/demo-repo#readme
 - https://pre-commit.com/hooks.html
 
+## PyTest
+
+```bash
+pytest
+
+================================= test session starts ===============================
+platform linux -- Python 3.10.6, pytest-7.4.0, pluggy-1.2.0
+rootdir: /home/charlotte/mlops/experiments/health-pipeline
+plugins: anyio-3.7.1
+collected 1 item     
+
+simple_test.py .                                                               [100%]
+
+================================= 1 passed in 1.01s =================================
+```
+
 ### Project Evaluation
 - [x] Problem description
 - [x] Cloud deployed with Localstack
 - [x] Experiment tracking with MLFlow
 - [x] Prefect for workflow orchestration
-- [x] Monitoring the model and inference data with Evidently, Grafana and Prometheus
+- [x] Monitoring the model and data with Evidently, Grafana and Prometheus
 - [x] Instructions for Reproducibility
-- [ ] Unit tests
+- [x] Unit tests
 - [ ] Integration tests
 - [ ] Code linting
-- [ ] Makefile for easy deploying
+- [x] Makefile for easy deploying
 - [x] Pre-commit hooks
 - [ ] Continuous integration and deployment
