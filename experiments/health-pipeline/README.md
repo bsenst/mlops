@@ -7,9 +7,7 @@ Screening for cardiac disease in huge populations is challenging. Invasive (card
 
 ![pipeline-architecture-image](https://github.com/bsenst/mlops/assets/8211411/8c1bb839-7759-47ba-aa83-13c0b21407f7)
 
-Open a GitHub Codespace or run locally.
-
-These instructions have been tested on WSL2 Ubuntu.
+Open a GitHub Codespace or run locally. These instructions have been tested on WSL2 Ubuntu.
 
 ## First Time Setup
 
@@ -85,12 +83,6 @@ https://docs.localstack.cloud/tutorials/s3-static-website-terraform/
 
 https://github.com/localstack/localstack/issues/8424
 
-### Workflow Orchestration & Experiment Tracking
-
-See the workflow orchestration tool prefect at `http://127.0.0.1:4200`.
-
-See the machine learning tracking tool mlflow at `http://127.0.0.1:5000`.
-
 ## Download the Training Dataset & Train your first Model
 
 ```bash
@@ -102,6 +94,19 @@ unzip heart+disease.zip && cd ..
 export MLFLOW_S3_ENDPOINT_URL=http://127.0.0.1:4566
 python scripts/train-heart-disease-model.py
 ```
+
+## Prefect Agent
+Regularly deploy a XGBoost model on random batches of training data and save it to the MLFlow registry.
+
+```bash
+prefect agent start --pool default-agent-pool --work-queue default
+```
+
+### Workflow Orchestration & Experiment Tracking
+
+See the workflow orchestration tool prefect at `http://127.0.0.1:4200`.
+
+See the machine learning tracking tool mlflow at `http://127.0.0.1:5000`.
 
 ## Generate Synthetic Health Data for Inference
 Working with the Synthea source code requires Java and Gradle.
