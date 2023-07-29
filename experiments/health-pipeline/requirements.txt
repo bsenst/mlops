@@ -8,6 +8,7 @@ prefect
 evidently
 mlflow
 boto3
+s3fs
 
 pytest
 pre-commit

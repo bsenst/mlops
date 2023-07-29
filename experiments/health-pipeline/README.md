@@ -37,11 +37,9 @@ wget https://github.com/localstack/localstack-cli/releases/download/v2.1.0/local
 sudo tar xvzf localstack-cli-2.1.0-linux-*-onefile.tar.gz -C /usr/local/bin
 ```
 
-Run `localstack config validate --file docker-compose-localstack.yml` to validate the docker-compose file and check the proper installation of localstack.
-
 ## Starting the Services
 
-Run several commands to start localstack, mlflow, prefect and monitoring service with make.
+With make Run several commands to start localstack, mlflow, prefect and monitoring service.
 
 ```bash
 make
@@ -72,6 +70,7 @@ Create a S3 bucket for later use.
 
 ```bash
 aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://s3bucket
+aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://prefect
 aws --endpoint-url http://127.0.0.1:4566 s3 ls
 ```
 
@@ -82,6 +81,12 @@ https://docs.localstack.cloud/user-guide/integrations/terraform/
 https://docs.localstack.cloud/tutorials/s3-static-website-terraform/
 
 https://github.com/localstack/localstack/issues/8424
+
+### Workflow Orchestration & Experiment Tracking
+
+See the workflow orchestration tool prefect at `http://127.0.0.1:4200`.
+
+See the machine learning tracking tool mlflow at `http://127.0.0.1:5000`.
 
 ## Download the Training Dataset & Train your first Model
 
@@ -96,17 +101,34 @@ python scripts/train-heart-disease-model.py
 ```
 
 ## Prefect Agent
-Regularly deploy a XGBoost model on random batches of training data and save it to the MLFlow registry.
+Regularly train a XGBoost model from a subsample of the training data and save it to the MLFlow registry. 
+Prefect has a unique sequence of steps to initiate the workflow orchestration:
+
+1. Prefect Deployment Build - either prepared script or yaml configuration file
+2. Prefect Deployment Apply - log the deployment to the prefect server
+3. Start Prefect Agent 
+
+Run the `prefect_deploy.py` script to create a prefect deployment.
+
+```bash
+python scripts/prefect_deploy.py
+```
+
+Prefect workers and prefect agents can be set up to wait for tasks and flows.
+Run a prefect agent to start working on the deployment.
 
 ```bash
 prefect agent start --pool default-agent-pool --work-queue default
+# The prefect_deploy.py script is configured with a storage block.
+# Workers currently only support local storage. Please use an agent to execute this flow run.
+prefect worker start --pool easy-worker
 ```
 
-### Workflow Orchestration & Experiment Tracking
-
-See the workflow orchestration tool prefect at `http://127.0.0.1:4200`.
-
-See the machine learning tracking tool mlflow at `http://127.0.0.1:5000`.
+```bash
+prefect config set PREFECT_ORION_UI_API_URL="http://127.0.0.1:4200/api"
+prefect config set PREFECT_API_URL="http://127.0.0.1:4200/api"
+prefect config view
+```
 
 ## Generate Synthetic Health Data for Inference
 Working with the Synthea source code requires Java and Gradle.
@@ -200,6 +222,11 @@ simple_test.py .                                                               [
 
 ================================= 1 passed in 1.01s =================================
 ```
+
+## Clean up
+Shut down python services with Ctrl+C.
+To get the IDs of the running docker containers enter `docker ps`.
+Stop docker container with `docker stop <CONTAINER-ID>`.
 
 ### Project Evaluation
 - [x] Problem description

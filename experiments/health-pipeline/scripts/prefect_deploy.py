@@ -15,6 +15,9 @@ from sklearn.model_selection import train_test_split
 import mlflow
 
 RANDOM_SEED=42
+NUM_BOOST_ROUND=100
+EARLY_STOPPING_ROUNDS=10
+MAX_EVALS=10
 
 @task
 def read_data():
@@ -38,7 +41,7 @@ def prepare_features(heart_disease_df: pd.DataFrame):
     heart_disease_df.fbs.replace("?", np.nan, inplace=True)
     heart_disease_df.fbs.fillna(heart_disease_df.fbs.astype(float).mean().round(0), inplace=True)
     heart_disease_df["fbs"] = heart_disease_df["fbs"].astype(int)
-    heart_disease_df = heart_disease_df.sample(int(len(heart_disease_df)*0.6))
+    heart_disease_df = heart_disease_df.sample(int(len(heart_disease_df)*0.6)) # simulate changing training data
     X = heart_disease_df.drop('num', axis=1)
     y = heart_disease_df['num']
     return X, y
@@ -63,8 +66,8 @@ def train_model_search(train, valid, test, y_test):
                 params=params,
                 dtrain=train,
                 evals=[(valid, 'validation')],
-                num_boost_round=2200,
-                early_stopping_rounds=50)
+                num_boost_round=NUM_BOOST_ROUND,
+                early_stopping_rounds=EARLY_STOPPING_ROUNDS)
             y_pred = model_xgb.predict(test)
             rmse = mean_squared_error(y_test, y_pred, squared=False)
             mlflow.log_metric("rmse", rmse)
@@ -86,7 +89,7 @@ def train_model_search(train, valid, test, y_test):
         fn=objective,
         space=search_space,
         algo=tpe.suggest,
-        max_evals=50,
+        max_evals=MAX_EVALS,
         trials=Trials()
     )
 
@@ -94,15 +97,15 @@ def train_model_search(train, valid, test, y_test):
 def train_best_model(train, valid, test, y_test):
     with mlflow.start_run():
         best_params = {
-            'colsample_bytree': 0.9250870893919794,
-            'gamma': 0.007995628667745471,
-            'learning_rate': 0.20384373996439606,
-            'max_depth': 4,
-            'min_child_weight': 0.41092408055939844,
-            'reg_alpha': 0.007444391334457018,
-            'reg_lambda': 0.017392816466180783,
-            'subsample': 0.7772671896767146,
-            'n_estimators': 2200,
+            'colsample_bytree': 0.30367906193659744,
+            'gamma': 0.008326314091255194,
+            'learning_rate': 0.050332228502822964,
+            'max_depth': 3,
+            'min_child_weight': 15.432921303209868,
+            'reg_alpha': 0.01154048552318447,
+            'reg_lambda': 0.09234514923882967,
+            'subsample': 0.6589919030441211,
+            'n_estimators': 100,
             'seed': RANDOM_SEED
         }
         mlflow.set_tag("type", "best_model")
@@ -111,8 +114,8 @@ def train_best_model(train, valid, test, y_test):
             params=best_params,
             dtrain=train,
             evals=[(valid, 'validation')],
-            num_boost_round=2200,
-            early_stopping_rounds=50)
+            num_boost_round=NUM_BOOST_ROUND,
+            early_stopping_rounds=EARLY_STOPPING_ROUNDS)
         y_pred = model_xgb.predict(test)
         rmse = mean_squared_error(y_test, y_pred, squared=False)
         mlflow.log_metric("rmse", rmse)
@@ -137,12 +140,16 @@ from datetime import timedelta
 
 from prefect.deployments import Deployment
 from prefect.orion.schemas.schedules import IntervalSchedule
+from prefect.filesystems import RemoteFileSystem
+
+remote_file_system_block = RemoteFileSystem.load("prefect-bucket")
 
 deployment = Deployment.build_from_flow(
   flow=main,
   name="model_training_prefect",
-  schedule=IntervalSchedule(interval=timedelta(minutes=30)),
-  tags=["ml"]
+  # schedule=IntervalSchedule(interval=timedelta(minutes=30)),
+  tags=["ml"],
+  storage=remote_file_system_block,
 )
 
 deployment.apply()
