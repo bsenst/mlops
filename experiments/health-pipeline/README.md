@@ -1,5 +1,5 @@
 # Screening for Cardiac Disease
-Screening for cardiac disease in huge populations is challenging. Invasive (cardiac catheterization) and non-invasive (imaging, exercise testing) diagnostic procedures are available which also differ regarding availability, diagnostic strength, and costs. Clinical features are helpful to screen in routine setting. Furthermore screening solely using patient data can additional lower the barrier to recognize people at risk. The machine learning model included in this data pipeline was trained on the heart disease dataset from the UCI machine learning repository. To illustrate its use the trained model is deployed to run batch inference on synthetic patient data created by the Synthea library.
+Screening for cardiac disease in huge populations is challenging. Invasive (cardiac catheterization) and non-invasive (imaging, exercise testing) diagnostic procedures are available which differ regarding availability, diagnostic strength, and costs. Clinical features are broadly available to screen for cardiac risk in routine setting but might be difficult to scale for larger populations. The machine learning model included in this data pipeline was trained on the heart disease dataset from the UCI machine learning repository. To illustrate its use the trained model is deployed running batch inference on synthetic patient data created by the Synthea library.
 
 ***The limited training data resulted in low accuracy of the final model and in general, this service does not include medical advice and should not used in real world practice.***
 
@@ -148,6 +148,8 @@ prefect deployment run "main/model_training_prefect"
 
 Switch back to the terminal that is running the prefect agent and watch the deployment run.
 One can observe the agent downloading the deployment from the S3 bucket in the localstack terminal.
+
+![image](https://github.com/bsenst/mlops/assets/8211411/81727459-5078-4dc7-8efc-57c42a6656f8)
 
 ### Generate Synthetic Health Data for Inference
 Working with the Synthea source code requires Java and Gradle.
