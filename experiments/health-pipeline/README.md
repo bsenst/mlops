@@ -170,6 +170,8 @@ python scripts/predict-heart-disease.py
 https://docs.localstack.cloud/tutorials/reproducible-machine-learning-cloud-pods/
 
 ```bash
+cd lambda-service
+
 # zip the python script
 zip lambda.zip test-lambda.py 
 
@@ -205,12 +207,27 @@ aws --endpoint-url http://127.0.0.1:4566 lambda delete-function --function-name 
 ## Monitor Model in Production
 https://github.com/evidentlyai/evidently/blob/main/examples/integrations/grafana_monitoring_service
 
+Go to the grafana dashboard at http://localhost:3000/ and login as user `admin` with password `admin`.
+Make sure that prometheus (http://localhost:9090/) and evidently are running (http://localhost:8085/).
+
 ```bash
+cd grafana_monitoring_service
 python scripts/example_run_request.py
 ```
 
+This script will send data continuously to the monitoring service.
+
+```
+Wait 2 seconds till the next try.
+Send a data item for synthea
+Success.
+```
+
+Evidently evaluates production data compared to reference data for data drift.
+Production data includes future predictions made with the supplied model.
+Reference data consists of training data and represent ground truth.
+
 ## Pre-commit Hook
-Has already been integrated in this repository using the following commands:
 
 ```bash
 $ pip install pre-commit
@@ -222,17 +239,18 @@ $ pre-commit run --all-files
 - https://pre-commit.com/hooks.html
 
 ## PyTest
+Run `pytest` to test with a dummy script.
 
 ```bash
 pytest
 
 ================================= test session starts ===============================
 platform linux -- Python 3.10.6, pytest-7.4.0, pluggy-1.2.0
-rootdir: /home/charlotte/mlops/experiments/health-pipeline
+rootdir: /home/myusername/mlops/experiments/health-pipeline
 plugins: anyio-3.7.1
 collected 1 item     
 
-simple_test.py .                                                               [100%]
+tests/simple_test.py .                                                               [100%]
 
 ================================= 1 passed in 1.01s =================================
 ```

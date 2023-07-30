@@ -5,6 +5,7 @@ wandb
 source
 venv
 .pytest_cache
+.vscode
 
 taxi/input
 taxi/mlruns
@@ -52,3 +53,8 @@ experiments/health-pipeline/awscliv2.zip
 experiments/health-pipeline/localstack-cli-2.1.0-linux-amd64-onefile.tar.gz
 experiments/health-pipeline/heart-disease
 experiments/health-pipeline/mlflow.db
+experiments/health-pipeline/__pycache__
+experiments/health-pipeline/mlflow
+experiments/health-pipeline/heart-disease-logreg-mode.pkl
+experiments/health-pipeline/lambda.zip
+

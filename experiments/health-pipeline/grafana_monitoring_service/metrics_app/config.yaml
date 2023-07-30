@@ -1,0 +1,23 @@
+datasets:
+  synthea:
+    column_mapping:
+      numerical_features:
+      - age
+      - sex
+      - trestbps
+      - chol
+      - fbs
+      target: num
+    data_format:
+      header: true
+      separator: ','
+    monitors:
+      - data_drift
+
+service:
+  calculation_period_sec: 2
+  min_reference_size: 30
+  moving_reference: false
+  datasets_path: datasets
+  use_reference: true
+  window_size: 5
