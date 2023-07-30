@@ -37,7 +37,7 @@ wget https://github.com/localstack/localstack-cli/releases/download/v2.1.0/local
 sudo tar xvzf localstack-cli-2.1.0-linux-*-onefile.tar.gz -C /usr/local/bin
 ```
 
-## Starting the Services
+## Running the Pipeline
 
 With make Run several commands to start localstack, mlflow, prefect and monitoring service.
 
@@ -83,28 +83,32 @@ aws --endpoint-url http://127.0.0.1:4566 s3 ls
 * https://docs.localstack.cloud/tutorials/s3-static-website-terraform/
 * https://github.com/localstack/localstack/issues/8424
 
-### Workflow Orchestration, Experiment Tracking & Monitoring
-Check that the services are running:
-
-* See the workflow orchestration tool prefect at `http://127.0.0.1:4200`.
-* See the machine learning tracking tool mlflow at `http://127.0.0.1:5000`.
-* See Grafana at `http://localhost:3000/`.
-* See Prometheus at `http://localhost:9090/`.
-
-## Download the Training Dataset & Train your first Model
+### Download the Training Dataset & Train your first Model
 
 ```bash
 mkdir heart-disease && cd heart-disease && wget https://archive.ics.uci.edu/static/public/45/heart+disease.zip
 unzip heart+disease.zip && cd ..
 ```
 
+See the machine learning tracking tool mlflow at `http://127.0.0.1:5000`.
+
 ```bash
 export MLFLOW_S3_ENDPOINT_URL=http://127.0.0.1:4566
 python scripts/train-heart-disease-model.py
-
 ```
 
-## Prefect Agent
+### Prefect Agent
+
+Configure the backend settings for the workflow orchestration tool prefect and start the prefect server.
+Since this is only for development password and usernames are required to be not confidential. 
+
+```bash
+prefect config set PREFECT_API_DATABASE_CONNECTION_URL="postgresql+asyncpg://postgres:yourTopSecretPassword@localhost:5432/prefect"
+prefect server start
+```
+
+See the workflow orchestration tool prefect at `http://127.0.0.1:4200`.
+
 Regularly train a XGBoost model from a subsample of the training data and save it to the MLFlow registry. 
 Prefect has a unique sequence of steps to initiate the workflow orchestration:
 
@@ -145,7 +149,7 @@ prefect deployment run "main/model_training_prefect"
 Switch back to the terminal that is running the prefect agent and watch the deployment run.
 One can observe the agent downloading the deployment from the S3 bucket in the localstack terminal.
 
-## Generate Synthetic Health Data for Inference
+### Generate Synthetic Health Data for Inference
 Working with the Synthea source code requires Java and Gradle.
 
 ```bash
@@ -160,7 +164,7 @@ mv patients.csv.zip ../../../mlops/experiments/health-pipeline/data/patients.csv
 
 https://github.com/synthetichealth/synthea
 
-## Run Inference on Synthetic Data
+### Run Inference on Synthetic Data
 
 ```bash
 python scripts/predict-heart-disease.py
@@ -204,7 +208,7 @@ Delete the lambda function service if no longer needed.
 aws --endpoint-url http://127.0.0.1:4566 lambda delete-function --function-name test-lambda
 ```
 
-## Monitor Model in Production
+### Monitor Model in Production
 https://github.com/evidentlyai/evidently/blob/main/examples/integrations/grafana_monitoring_service
 
 Go to the grafana dashboard at http://localhost:3000/ and login as user `admin` with password `admin`.
@@ -262,7 +266,7 @@ Shut down python services with Ctrl+C.
 To get the IDs of the running docker containers enter `docker ps`.
 Stop docker container with `docker stop <CONTAINER-ID>`.
 
-### Project Evaluation
+# Project Evaluation
 - [x] Problem description
 - [x] Cloud deployed with Localstack
 - [x] Experiment tracking with MLFlow
