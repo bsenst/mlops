@@ -223,6 +223,8 @@ Send a data item for synthea
 Success.
 ```
 
+![image](https://github.com/bsenst/mlops/assets/8211411/76cc653a-5e17-482c-8441-73d7f860f0dd)
+
 Evidently evaluates production data compared to reference data for data drift.
 Production data includes future predictions made with the supplied model.
 Reference data consists of training data and represent ground truth.
