@@ -74,19 +74,18 @@ aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://prefect
 aws --endpoint-url http://127.0.0.1:4566 s3 ls
 ```
 
-https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+* https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+* https://docs.localstack.cloud/user-guide/integrations/terraform/
+* https://docs.localstack.cloud/tutorials/s3-static-website-terraform/
+* https://github.com/localstack/localstack/issues/8424
 
-https://docs.localstack.cloud/user-guide/integrations/terraform/
+### Workflow Orchestration, Experiment Tracking & Monitoring
+Check that the services are running:
 
-https://docs.localstack.cloud/tutorials/s3-static-website-terraform/
-
-https://github.com/localstack/localstack/issues/8424
-
-### Workflow Orchestration & Experiment Tracking
-
-See the workflow orchestration tool prefect at `http://127.0.0.1:4200`.
-
-See the machine learning tracking tool mlflow at `http://127.0.0.1:5000`.
+* See the workflow orchestration tool prefect at `http://127.0.0.1:4200`.
+* See the machine learning tracking tool mlflow at `http://127.0.0.1:5000`.
+* See Grafana at `http://localhost:3000/`.
+* See Prometheus at `http://localhost:9090/`.
 
 ## Download the Training Dataset & Train your first Model
 
@@ -104,7 +103,7 @@ python scripts/train-heart-disease-model.py
 Regularly train a XGBoost model from a subsample of the training data and save it to the MLFlow registry. 
 Prefect has a unique sequence of steps to initiate the workflow orchestration:
 
-1. Prefect Deployment Build - either prepared script or yaml configuration file
+1. Prefect Deployment Build - either from a prepared script or yaml configuration file
 2. Prefect Deployment Apply - log the deployment to the prefect server
 3. Start Prefect Agent 
 
@@ -112,23 +111,33 @@ Run the `prefect_deploy.py` script to create a prefect deployment.
 
 ```bash
 python scripts/prefect_deploy.py
+prefect deployment ls
+prefect deployment inspect "main/model_training_prefect"
 ```
 
-Prefect workers and prefect agents can be set up to wait for tasks and flows.
-Run a prefect agent to start working on the deployment.
-
-```bash
-prefect agent start --pool default-agent-pool --work-queue default
-# The prefect_deploy.py script is configured with a storage block.
-# Workers currently only support local storage. Please use an agent to execute this flow run.
-prefect worker start --pool easy-worker
-```
+Set prefect configurations.
 
 ```bash
 prefect config set PREFECT_ORION_UI_API_URL="http://127.0.0.1:4200/api"
 prefect config set PREFECT_API_URL="http://127.0.0.1:4200/api"
 prefect config view
 ```
+
+Prefect workers and prefect agents can be set up to wait for tasks and flows.
+Workers only support local storage. Run a prefect agent that will wait for working on a deployment.
+
+```bash
+prefect agent start --pool default-agent-pool --work-queue default-agent-pool
+```
+
+Then open a new terminal and activate the virtual environment `source venv/bin/activate`.
+
+```bash
+prefect deployment run "main/model_training_prefect"
+```
+
+Switch back to the terminal that is running the prefect agent and watch the deployment run.
+One can observe the agent downloading the deployment from the S3 bucket in the localstack terminal.
 
 ## Generate Synthetic Health Data for Inference
 Working with the Synthea source code requires Java and Gradle.

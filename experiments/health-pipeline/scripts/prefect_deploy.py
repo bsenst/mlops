@@ -119,7 +119,7 @@ def train_best_model(train, valid, test, y_test):
         y_pred = model_xgb.predict(test)
         rmse = mean_squared_error(y_test, y_pred, squared=False)
         mlflow.log_metric("rmse", rmse)
-        mlflow.xgboost.log_model(model_xgb, artifact_path="models_mlflow")
+        # mlflow.xgboost.log_model(model_xgb, artifact_path="models_mlflow")
     mlflow.end_run()
 
 
