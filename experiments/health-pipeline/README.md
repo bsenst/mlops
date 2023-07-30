@@ -66,6 +66,10 @@ Default region name [None]: us-east-1
 Default output format [None]:
 ```
 
+```bash
+aws --endpoint-url=http://localhost:4566 sts get-caller-identity
+```
+
 Create a S3 bucket for later use.
 
 ```bash
@@ -97,6 +101,7 @@ unzip heart+disease.zip && cd ..
 ```bash
 export MLFLOW_S3_ENDPOINT_URL=http://127.0.0.1:4566
 python scripts/train-heart-disease-model.py
+
 ```
 
 ## Prefect Agent
@@ -111,6 +116,7 @@ Run the `prefect_deploy.py` script to create a prefect deployment.
 
 ```bash
 python scripts/prefect_deploy.py
+aws --endpoint-url http://127.0.0.1:4566 s3 ls s3://prefect
 prefect deployment ls
 prefect deployment inspect "main/model_training_prefect"
 ```
@@ -167,10 +173,13 @@ https://docs.localstack.cloud/tutorials/reproducible-machine-learning-cloud-pods
 # zip the python script
 zip lambda.zip test-lambda.py 
 
-# create a new S3 bucket and upload the zipped python script
+# create a new S3 bucket, upload the zipped python script
 aws --endpoint-url http://127.0.0.1:4566 s3 mb s3://lambda-functions
 aws --endpoint-url http://127.0.0.1:4566 s3 cp lambda.zip s3://lambda-functions/lambda.zip
+aws --endpoint-url http://127.0.0.1:4566 s3 ls s3://lambda-functions
+```
 
+```bash
 # create the lambda service within localstack
 aws --endpoint-url http://127.0.0.1:4566 lambda create-function --function-name test-lambda \
   --runtime python3.8 \
@@ -187,14 +196,10 @@ aws --endpoint-url http://127.0.0.1:4566 lambda invoke \
     /dev/stdout
 ```
 
+Delete the lambda function service if no longer needed.
+
 ```bash
 aws --endpoint-url http://127.0.0.1:4566 lambda delete-function --function-name test-lambda
-```
-
-## Prefect Deployment
-
-```bash
-python scripts/prefect_deploy.py
 ```
 
 ## Monitor Model in Production
